@@ -24,22 +24,35 @@ var input = document.getElementById('title');
 var textarea = document.getElementById('content');
 var addBtn = document.getElementById('add-btn');
 var toDoArea =  document.getElementById('to-do-area');
-
+var toDoItems = [];
 addBtn.addEventListener('click', function () {
-
+  //ToDoの表示
   var title = input.value;
   var content = textarea.value;
+  var toDoItem = {
+    title: title,
+    content: content,
+  };
+  toDoItems.push(toDoItem);
+  //JSONに変換
+  var data = JSON.stringify(toDoItems)
+  localStorage.setItem('todo', data);
 
+  displayToDo(title, content);
+});
+
+
+function displayToDo(ttl, cnt) {
+  //h2、p追加
   var h2 = document.createElement('h2');
   var p =  document.createElement('p');
 
-  h2.innerHTML = title;
-  p.innerHTML = content;
+  h2.innerHTML = ttl;
+  p.innerHTML = cnt;
 
   var li = document.createElement('li');
 
   li.appendChild(h2);
   li.appendChild(p);
-
   toDoArea.appendChild(li)
-});
+}
