@@ -26,26 +26,42 @@ var addBtn = document.getElementById('add-btn');
 var removeBtn = document.getElementById('remove-btn');
 var toDoArea =  document.getElementById('to-do-area');
 var toDoItems = [];
+var form = document.forms.form;
+console.dir(form);
 
 function addToDo() {
+  var id = Math.random();
   var title = input.value;
   var content = textarea.value;
+  //タイトルが空だった場合の処理
+  //if (title == false){
+  if (!title) {
+    return false;
+  }
+
+
   var toDoItem = {
+    id: id,
     title: title,
     content: content,
   };
 
-saveLocalStorage(toDoItem);
+
+saveData(toDoItem);
 displayToDo(toDoItem);
   //入力エリアを空にする
   input.value = "";
   textarea.value = "";
 };
 
-function saveLocalStorage(toDoObj) {
-  toDoItems.push(toDoObj);
+function saveData(data) {
+  toDoItems.push(data);
+  saveLocalStorage(toDoItems);
+}
+
+function saveLocalStorage(dataArray) {
   //JSONに変換
-  var data = JSON.stringify(toDoItems)
+  var data = JSON.stringify(dataArray)
   //保存
   localStorage.setItem('todo', data);
 }
@@ -65,8 +81,12 @@ function displayToDo(toDoObj) {
   deleteBtn.addEventListener('click', function () {
     toDoArea.removeChild(li);
 
-    toDoItems.find(function () {
+    var result = toDoItems.find(function (elem) {
+        return elem.id === toDoObj.id;
 
+      var tatIndex = toDoItems.indeexOf(result);
+      toDoItems.splice(tatIndex, 1);
+      saveLocalStorage(toDoItems)
     });
   });
 
@@ -93,7 +113,10 @@ function loadData() {
     return false
   }
   for (var i = 0; i < toDoData.length; i++) {
+    var id = toDoData[i].id;
+
     var toDoItem = {
+      id: id,
       title: toDoData[i].title,
       content: toDoData[i].content,
     };
